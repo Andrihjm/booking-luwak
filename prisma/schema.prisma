@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+enum TypeFlightSeat {
+  ECONOMY
+  BUSINESS
+  FIRST
+}
+
+enum StatusTransaction {
+  PENDING
+  SECCESS
+  FAILED
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  password   String
+  passport   String?
+  tickets    Ticket[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Ariplane {
+  id     String   @id @default(cuid())
+  name   String
+  code   String   @default("ABC-123")
+  image  String
+  flight Flight[]
+}
+
+model Flight {
+  id                    String       @id @default(cuid())
+  departure_date        DateTime
+  departure_city        String
+  departure_city_code   String
+  arrival_date          DateTime
+  destination_city      String
+  destination_city_code String
+  price                 String
+  flightSeat            FlightSeat[]
+  tickets               Ticket[]
+  airplane_id           String
+  airplane              Ariplane     @relation(fields: [airplane_id], references: [id])
+}
+
+model FlightSeat {
+  id          String         @id @default(cuid())
+  seat_number Int
+  is_booked   Boolean?       @default(false)
+  type        TypeFlightSeat
+  flightId    String
+  flight      Flight         @relation(fields: [flightId], references: [id])
+  tickets     Ticket[]
+}
+
+model Ticket {
+  id             String            @id @default(cuid())
+  code           String
+  price          BigInt
+  booking_date   DateTime
+  token_midtrans String?
+  status         StatusTransaction
+  userId         String
+  user           User              @relation(fields: [userId], references: [id])
+  flightId       String
+  flight         Flight            @relation(fields: [flightId], references: [id])
+  flightSeatId   String            @unique
+  flightSeat     FlightSeat        @relation(fields: [flightSeatId], references: [id])
+}
