@@ -1,6 +1,14 @@
+import { getUser } from "@/lib/auth";
 import FormSignIn from "../../form/form-signin";
+import { redirect } from "next/navigation";
 
-const page = () => {
+const page = async () => {
+  const { user, session } = await getUser();
+
+  if (session && user.role === "ADMIN") {
+    redirect("/dashboard");
+  }
+
   return (
     <>
       <header className="sm:w-full sm:max-w-sm sm:mx-auto">
