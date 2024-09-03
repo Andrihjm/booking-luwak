@@ -7,13 +7,19 @@ import React from "react";
 import { createAirplane } from "../lib/actions";
 import { useFormState } from "react-dom";
 import { ActionResult } from "../../../(auth)/lib/action";
+import { Ariplane } from "@prisma/client";
+
+interface FormAirplaneProps {
+  type?: "CREATE" | "EDIT";
+  defaultValues?: Ariplane | null;
+}
 
 const initialFormState: ActionResult = {
   errorTitle: null,
   errorDesc: [],
 };
 
-const FormAirplane = () => {
+const FormAirplane = ({ type, defaultValues }: FormAirplaneProps) => {
   const [state, formAction] = useFormState(createAirplane, initialFormState);
   console.log(state);
 
@@ -34,12 +40,22 @@ const FormAirplane = () => {
 
         <div className="grid w-full items-center gap-1.5">
           <Label htmlFor="code">Code</Label>
-          <Input id="code" name="code" placeholder="Aircraft code..." />
+          <Input
+            id="code"
+            name="code"
+            defaultValue={defaultValues?.code}
+            placeholder="Aircraft code..."
+          />
         </div>
 
         <div className="grid w-full items-center gap-1.5">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" placeholder="Aircraft name..." />
+          <Input
+            id="name"
+            name="name"
+            defaultValue={defaultValues?.name}
+            placeholder="Aircraft name..."
+          />
         </div>
 
         <div className="grid w-full items-center gap-1.5">

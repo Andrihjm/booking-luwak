@@ -53,3 +53,18 @@ export async function createAirplane(
   revalidatePath("/dashboard/airplanes");
   redirect("/dashboard/airplanes");
 }
+
+export async function getAirplaneById(id: string) {
+  try {
+    const airplaneById = await prisma.ariplane.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    return airplaneById;
+  } catch (error) {
+    console.log("Internal Server Error", error);
+    return null;
+  }
+}

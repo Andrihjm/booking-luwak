@@ -1,6 +1,15 @@
 import FormAirplane from "../../components/form-airplane";
+import { getAirplaneById } from "../../lib/actions";
 
-const page = () => {
+interface AirplaneByIdProps {
+  params: {
+    id: string;
+  };
+}
+
+const page = async ({ params }: AirplaneByIdProps) => {
+  const data = await getAirplaneById(params.id);
+
   return (
     <>
       <div className="container-fluid">
@@ -8,7 +17,7 @@ const page = () => {
           <h1 className="my-5 text-2xl font-bold">Edit airplane data</h1>
         </div>
 
-        <FormAirplane />
+        <FormAirplane type="EDIT" defaultValues={data} />
       </div>
     </>
   );
