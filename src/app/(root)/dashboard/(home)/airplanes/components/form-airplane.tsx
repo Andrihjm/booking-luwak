@@ -4,7 +4,7 @@ import SumbitFormButton from "@/components/shared/sumbit-form-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
-import { createAirplane } from "../lib/actions";
+import { createAirplane, updateDataAirplane } from "../lib/actions";
 import { useFormState } from "react-dom";
 import { ActionResult } from "../../../(auth)/lib/action";
 import { Ariplane } from "@prisma/client";
@@ -20,8 +20,13 @@ const initialFormState: ActionResult = {
 };
 
 const FormAirplane = ({ type, defaultValues }: FormAirplaneProps) => {
-  const [state, formAction] = useFormState(createAirplane, initialFormState);
-  console.log(state);
+  const updateAirplaneWithId = (_state: ActionResult, formData: FormData) =>
+    updateDataAirplane(null, defaultValues?.id || "", formData);
+
+  const [state, formAction] = useFormState(
+    type === "CREATE" ? createAirplane : updateAirplaneWithId,
+    initialFormState
+  );
 
   return (
     <>

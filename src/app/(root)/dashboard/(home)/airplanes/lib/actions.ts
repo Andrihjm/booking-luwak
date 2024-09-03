@@ -68,3 +68,83 @@ export async function getAirplaneById(id: string) {
     return null;
   }
 }
+
+export async function updateDataAirplane(
+  prevState: unknown,
+  id: string,
+  formData: FormData
+): Promise<ActionResult> {
+  let airplaneFormSchemaUpdate;
+
+  const image = formData.get("image") as File;
+
+  if (image.size > 0) {
+    airplaneFormSchemaUpdate = airplaneFormSchema.omit({
+      image: true,
+    });
+  } else {
+    airplaneFormSchemaUpdate = airplaneFormSchema;
+  }
+
+  const updateAirplane = airplaneFormSchemaUpdate.safeParse({
+    name: formData.get("name"),
+    code: formData.get("code"),
+    image: formData.get("image"),
+  });
+
+  if (!updateAirplane.success) {
+    const errorDesc = updateAirplane.error.issues.map((issue) => issue.message);
+
+    return {
+      errorTitle: "Error validation airplane.",
+      errorDesc,
+    };
+  }
+
+  let fileName;
+
+  if (image.size > 0) {
+    const uploadedFile = await uploadFile(image);
+
+    if (uploadedFile instanceof Error) {
+      return {
+        errorTitle: "Failed to upload image",
+        errorDesc: ["An error occurred while uploading the image."],
+      };
+    }
+
+    fileName = uploadedFile;
+  } else {
+    const airplane = await prisma.ariplane.findFirst({
+      where: {
+        id: id,
+      },
+      select: {
+        image: true,
+      },
+    });
+
+    fileName = airplane?.image;
+  }
+
+  try {
+    await prisma.ariplane.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: updateAirplane.data.name,
+        code: updateAirplane.data.code,
+        image: fileName as string,
+      },
+    });
+  } catch (error) {
+    return {
+      errorTitle: "Failed to update airplane",
+      errorDesc: ["An error occurred while updating the airplane."],
+    };
+  }
+
+  revalidatePath("/dashboard/airplanes");
+  redirect("/dashboard/airplanes");
+}
