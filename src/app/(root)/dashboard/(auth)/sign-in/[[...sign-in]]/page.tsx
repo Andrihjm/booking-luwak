@@ -1,4 +1,4 @@
-import FormSignIn from "@/components/form/auth/form-sign-in";
+import FormSignIn from "../../form/form-signin";
 
 const page = () => {
   return (
