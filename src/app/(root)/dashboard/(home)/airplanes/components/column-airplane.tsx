@@ -1,14 +1,28 @@
 "use client";
 
+import { getUrlFileImage } from "@/lib/supabase";
 import { Ariplane } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Pencil } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export const columns: ColumnDef<Ariplane>[] = [
   {
     accessorKey: "image",
     header: "Image",
+    cell: ({ row }) => {
+      const airplane = row.original;
+
+      return (
+        <Image
+          src={getUrlFileImage(airplane.image)}
+          alt="airplane image"
+          width={50}
+          height={50}
+        />
+      );
+    },
   },
   {
     accessorKey: "code",

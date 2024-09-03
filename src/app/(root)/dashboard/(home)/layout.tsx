@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Dashboard | Sign-in",
+  title: "Dashboard | Airplanes",
 };
 
 export default async function RootLayout({

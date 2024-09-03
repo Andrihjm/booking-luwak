@@ -14,7 +14,7 @@ export const uploadFile = async (file: File) => {
 
     const { data, error } = await supabase.storage
       .from("ImageUpload")
-      .upload(`public/airplane/${fileName}`, file, {
+      .upload(`public/airplanes/${fileName}`, file, {
         cacheControl: "3600",
         upsert: false,
       });
@@ -22,8 +22,18 @@ export const uploadFile = async (file: File) => {
     if (error) {
       throw new Error(error.message);
     }
+
+    return fileName;
   } catch (error) {
     console.log(error);
     return error;
   }
+};
+
+export const getUrlFileImage = (fileName: string) => {
+  const { data } = supabase.storage
+    .from("ImageUpload")
+    .getPublicUrl(`public/airplanes/${fileName}`);
+
+  return data.publicUrl;
 };
