@@ -5,6 +5,6 @@ export const formUserSchema = z.object({
     .string({ required_error: "Email is required." })
     .email({ message: "Email tidak valid." }),
   password: z.string({ required_error: "Password is required" }).min(3, {
-    message: "Password must be at least 6 characters",
+    message: "Password must be at least 3 characters",
   }),
 });
