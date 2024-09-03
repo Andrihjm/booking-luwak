@@ -3,10 +3,9 @@
 import { getUrlFileImage } from "@/lib/supabase";
 import { Ariplane } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import DeletedAirplane from "./deleted-airplane";
+import EditFormButton from "@/components/shared/edit-form-button";
 
 export const columns: ColumnDef<Ariplane>[] = [
   {
@@ -40,13 +39,7 @@ export const columns: ColumnDef<Ariplane>[] = [
 
       return (
         <div className="inline-flex items-center gap-5">
-          <Link
-            href={`/dashboard/airplanes/edit/${airplane.id}`}
-            className="flex items-center"
-          >
-            <Pencil size={18} className="mr-2" />
-            Edit
-          </Link>
+          <EditFormButton href={`/dashboard/airplanes/edit/${airplane.id}`} />
 
           <DeletedAirplane id={airplane.id} />
         </div>
