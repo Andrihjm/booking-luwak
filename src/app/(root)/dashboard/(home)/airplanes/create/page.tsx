@@ -8,7 +8,7 @@ const page = () => {
           <h1 className="my-5 text-2xl font-bold">Tambahkan data airplanes</h1>
         </div>
 
-        <FormAirplane />
+        <FormAirplane type="CREATE" />
       </div>
     </>
   );

@@ -7,6 +7,7 @@ interface SumbitFormButtonProps {
   children: React.ReactNode;
   className?: string;
   variant?: "outline" | "destructive" | "secondary" | "ghost";
+  size?: "default" | "sm" | "lg" | "icon";
   onClick?: () => void;
 }
 
@@ -14,6 +15,7 @@ const SumbitFormButton = ({
   children,
   className,
   variant,
+  size,
   onClick,
 }: SumbitFormButtonProps) => {
   const { pending } = useFormStatus();
@@ -24,6 +26,7 @@ const SumbitFormButton = ({
       className={`w-full ${className}`}
       onClick={onClick}
       disabled={pending}
+      size={size}
       type="submit"
     >
       {pending ? "Loading..." : children}

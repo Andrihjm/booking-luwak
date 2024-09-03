@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import DeletedAirplane from "./deleted-airplane";
 
 export const columns: ColumnDef<Ariplane>[] = [
   {
@@ -43,9 +44,11 @@ export const columns: ColumnDef<Ariplane>[] = [
             href={`/dashboard/airplanes/edit/${airplane.id}`}
             className="flex items-center"
           >
-            <Pencil size={20} className="mr-2" />
+            <Pencil size={18} className="mr-2" />
             Edit
           </Link>
+
+          <DeletedAirplane id={airplane.id} />
         </div>
       );
     },

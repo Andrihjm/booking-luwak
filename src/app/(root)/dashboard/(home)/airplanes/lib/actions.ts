@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { ActionResult } from "../../../(auth)/lib/action";
 import { airplaneFormSchema } from "./validation";
 import { revalidatePath } from "next/cache";
-import { uploadFile } from "@/lib/supabase";
+import { deleteFileImage, uploadFile } from "@/lib/supabase";
 import { error } from "console";
 import prisma from "../../../../../../../lib/prisma";
 
@@ -147,4 +147,46 @@ export async function updateDataAirplane(
 
   revalidatePath("/dashboard/airplanes");
   redirect("/dashboard/airplanes");
+}
+
+export async function deleteDataAirplane(
+  id: string
+): Promise<ActionResult | undefined> {
+  const data = await prisma.ariplane.findFirst({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!data) {
+    return {
+      errorTitle: "Failed to delete airplane",
+      errorDesc: [],
+    };
+  }
+
+  const deletedFile = await deleteFileImage(data.image);
+
+  if (deletedFile instanceof Error) {
+    return {
+      errorTitle: "Failed to delete file airplane",
+      errorDesc: ["An error occurred while deleting the airplane."],
+    };
+  }
+
+  try {
+    await prisma.ariplane.delete({
+      where: {
+        id: id,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return {
+      errorTitle: "Failed to delete data airplane",
+      errorDesc: ["An error occurred while deleting the airplane."],
+    };
+  }
+
+  revalidatePath("/dashboard/airplanes");
 }
