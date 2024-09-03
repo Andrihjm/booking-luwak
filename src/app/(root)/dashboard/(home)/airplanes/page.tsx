@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { columns } from "./components/column-airplane";
+import { getAirplanes } from "./lib/data";
 
-const page = () => {
+const page = async () => {
+  const airplane = await getAirplanes();
+
   return (
     <div className="container-fluid">
       <div className="flex items-center justify-between">
@@ -18,7 +21,7 @@ const page = () => {
         </Link>
       </div>
 
-      <DataTable columns={columns} data={[]} />
+      <DataTable columns={columns} data={airplane} />
     </div>
   );
 };
