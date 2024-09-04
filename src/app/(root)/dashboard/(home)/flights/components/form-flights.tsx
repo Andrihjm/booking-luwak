@@ -14,6 +14,7 @@ import { Ariplane, Flight } from "@prisma/client";
 import { useFormState } from "react-dom";
 import { createDataFlights, updateDataFlight } from "../lib/actions";
 import { ActionResult } from "../../../(auth)/lib/action";
+import { dateFormat } from "@/lib/utils";
 
 interface FormFlightsProps {
   airplanes: Ariplane[];
@@ -100,7 +101,11 @@ const FormFlights = ({ airplanes, type, defaultValues }: FormFlightsProps) => {
             <Input
               id="departure_date"
               name="departure_date"
-              // defaultValue={(defaultValues?.departure_date, "YYYY-MM-DDTHH:MM")} // Blum bisa
+              defaultValue={
+                defaultValues?.departure_date
+                  ? dateFormat(defaultValues.departure_date, "YYYY-MM-DDTHH:MM")
+                  : ""
+              }
               type="datetime-local"
               className="block"
             />
@@ -132,7 +137,11 @@ const FormFlights = ({ airplanes, type, defaultValues }: FormFlightsProps) => {
             <Input
               id="arrival_date"
               name="arrival_date"
-              // defaultValue={(defaultValues?.arrival_date, "YYYY-MM-DDTHH:MM")} // Blum bisa
+              defaultValue={
+                defaultValues?.arrival_date
+                  ? dateFormat(defaultValues.arrival_date, "YYYY-MM-DDTHH:MM")
+                  : ""
+              }
               type="datetime-local"
               className="block"
             />

@@ -2,12 +2,12 @@
 
 import { Ariplane, Flight, FlightSeat } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import DeletedAirplane from "../../airplanes/components/deleted-airplane";
 import EditFormButton from "@/components/shared/edit-form-button";
 import Image from "next/image";
 import { getUrlFileImage } from "@/lib/supabase";
 import ColumnsRouteFlights from "./columns-route-flights";
 import ColumnSeatPrice from "./column-seat-price";
+import DeleteButtonFormFlightProps from "./delete-button-form-flight";
 
 export type FlightColumn = Flight & {
   airplane: Ariplane;
@@ -68,7 +68,7 @@ export const columns: ColumnDef<FlightColumn>[] = [
         <div className="inline-flex items-center gap-5">
           <EditFormButton href={`/dashboard/flights/edit/${flight.id}`} />
 
-          <DeletedAirplane id={flight.id} />
+          <DeleteButtonFormFlightProps id={flight.id} />
         </div>
       );
     },

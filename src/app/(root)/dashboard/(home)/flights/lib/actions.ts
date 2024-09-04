@@ -99,3 +99,23 @@ export async function updateDataFlight(
   revalidatePath("/dashboard/flights");
   redirect("/dashboard/flights");
 }
+
+export async function deleteDataFlight(id: string) {
+  try {
+    await prisma.flightSeat.deleteMany({
+      where: {
+        flightId: id,
+      },
+    });
+
+    await prisma.flight.delete({
+      where: {
+        id: id,
+      },
+    });
+  } catch (error) {
+    console.log("Internal Server Error", error);
+    return null;
+  }
+  revalidatePath("/dashboard/flights");
+}
