@@ -75,7 +75,7 @@ model Flight {
 
 model FlightSeat {
   id          String         @id @default(cuid())
-  seat_number Int
+  seat_number String
   is_booked   Boolean?       @default(false)
   type        TypeFlightSeat
   flightId    String

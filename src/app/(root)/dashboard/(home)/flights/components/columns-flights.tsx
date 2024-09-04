@@ -4,6 +4,10 @@ import { Ariplane, Flight } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import DeletedAirplane from "../../airplanes/components/deleted-airplane";
 import EditFormButton from "@/components/shared/edit-form-button";
+import Image from "next/image";
+import { getUrlFileImage } from "@/lib/supabase";
+import ColumnsRouteFlights from "./columns-route-flights";
+import ColumnSeatPrice from "./column-seat-price";
 
 export type FlightColumn = Flight & {
   airplane: Ariplane;
@@ -16,8 +20,20 @@ export const columns: ColumnDef<FlightColumn>[] = [
     header: "Pesawat",
     cell: ({ row }) => {
       const flight = row.original;
+      const planeImageUrl = getUrlFileImage(flight.airplane.image);
 
-      return "Pesawat";
+      return (
+        <div className="inline-flex items-center gap-5">
+          <Image
+            src={planeImageUrl}
+            alt="Image plane"
+            width={50}
+            height={50}
+            className="rounded-md"
+          />
+          <p className="font-semibold">{flight.airplane.name}</p>
+        </div>
+      );
     },
   },
   {
@@ -26,16 +42,20 @@ export const columns: ColumnDef<FlightColumn>[] = [
     cell: ({ row }) => {
       const flight = row.original;
 
-      return "Pesawat";
+      return (
+        <>
+          <ColumnsRouteFlights flight={flight} />
+        </>
+      );
     },
   },
   {
     accessorKey: "price",
-    header: "Price",
+    header: "Harga / Kursi",
     cell: ({ row }) => {
       const flight = row.original;
 
-      return "Pesawat";
+      return <ColumnSeatPrice flight={flight} />;
     },
   },
   {
