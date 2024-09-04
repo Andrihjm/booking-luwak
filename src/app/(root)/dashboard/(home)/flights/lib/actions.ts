@@ -7,22 +7,6 @@ import { formFlightSchema } from "./validations";
 import { redirect } from "next/navigation";
 import { generateSeatPerClass } from "@/lib/utils";
 
-export async function getDataFlights() {
-  try {
-    const flight = await prisma.flight.findMany({
-      include: {
-        airplane: true,
-        flightSeat: true,
-      },
-    });
-
-    return flight;
-  } catch (error) {
-    console.log("Internal server error", error);
-    return [];
-  }
-}
-
 export async function createDataFlights(
   prevState: unknown,
   formData: FormData
@@ -62,6 +46,55 @@ export async function createDataFlights(
   await prisma.flightSeat.createMany({
     data: seats,
   });
+
+  revalidatePath("/dashboard/flights");
+  redirect("/dashboard/flights");
+}
+
+export async function updateDataFlight(
+  prevState: unknown,
+  id: string,
+  formData: FormData
+): Promise<ActionResult> {
+  const departure_date = new Date(formData.get("departure_date") as string);
+  const arrival_date = new Date(formData.get("arrival_date") as string);
+
+  const dataFlight = formFlightSchema.safeParse({
+    airplane_id: formData.get("airplane_id"),
+    departure_date,
+    departure_city: formData.get("departure_city"),
+    departure_city_code: formData.get("departure_city_code"),
+    arrival_date,
+    destination_city: formData.get("destination_city"),
+    destination_city_code: formData.get("destination_city_code"),
+    price: formData.get("price"),
+  });
+
+  if (!dataFlight.success) {
+    const errorDesc = dataFlight.error.issues.map((issue) => issue.message);
+
+    return {
+      errorTitle: "Error validation flight.",
+      errorDesc,
+    };
+  }
+
+  try {
+    await prisma.flight.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ...dataFlight.data,
+        price: dataFlight.data.price.toString(),
+      },
+    });
+  } catch (error) {
+    return {
+      errorTitle: "Failed to update flight",
+      errorDesc: ["An error occurred while updating the flight."],
+    };
+  }
 
   revalidatePath("/dashboard/flights");
   redirect("/dashboard/flights");

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { columns } from "./components/columns-flights";
 import { DataTable } from "@/components/shared/data-table";
-import { getDataFlights } from "./lib/actions";
+import { getDataFlights } from "./lib/data";
 
 export const metadata: Metadata = {
   title: "Dashboard | Flight",

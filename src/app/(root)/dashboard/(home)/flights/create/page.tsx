@@ -11,7 +11,7 @@ const page = async () => {
           <h1 className="my-5 text-2xl font-bold">Tambahkan data flights</h1>
         </div>
 
-        <FormFlights airplanes={airplane} />
+        <FormFlights type="CREATE" airplanes={airplane} />
       </div>
     </>
   );

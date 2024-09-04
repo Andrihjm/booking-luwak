@@ -1,6 +1,6 @@
 "use client";
 
-import { Ariplane, Flight } from "@prisma/client";
+import { Ariplane, Flight, FlightSeat } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import DeletedAirplane from "../../airplanes/components/deleted-airplane";
 import EditFormButton from "@/components/shared/edit-form-button";
@@ -12,6 +12,7 @@ import ColumnSeatPrice from "./column-seat-price";
 export type FlightColumn = Flight & {
   airplane: Ariplane;
   flightSeat: Flight[];
+  // flightSeat: FlightSeat[];
 };
 
 export const columns: ColumnDef<FlightColumn>[] = [

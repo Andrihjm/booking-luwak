@@ -10,13 +10,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Ariplane } from "@prisma/client";
+import { Ariplane, Flight } from "@prisma/client";
 import { useFormState } from "react-dom";
-import { createDataFlights } from "../lib/actions";
+import { createDataFlights, updateDataFlight } from "../lib/actions";
 import { ActionResult } from "../../../(auth)/lib/action";
 
 interface FormFlightsProps {
   airplanes: Ariplane[];
+  type?: "CREATE" | "EDIT";
+  defaultValues?: Flight | null;
 }
 
 const initialFormState: ActionResult = {
@@ -24,8 +26,14 @@ const initialFormState: ActionResult = {
   errorDesc: [],
 };
 
-const FormFlights = ({ airplanes }: FormFlightsProps) => {
-  const [state, formAction] = useFormState(createDataFlights, initialFormState);
+const FormFlights = ({ airplanes, type, defaultValues }: FormFlightsProps) => {
+  const updateAirplaneWithId = (_state: ActionResult, formData: FormData) =>
+    updateDataFlight(null, defaultValues?.id || "", formData);
+
+  const [state, formAction] = useFormState(
+    type === "CREATE" ? createDataFlights : updateAirplaneWithId,
+    initialFormState
+  );
 
   return (
     <>
@@ -45,7 +53,10 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
         <div className="grid grid-cols-2 items-center gap-4">
           <div className="space-y-2">
             <label htmlFor="airplane_id">Select plane</label>
-            <Select name="airplane_id">
+            <Select
+              name="airplane_id"
+              defaultValue={defaultValues?.airplane_id}
+            >
               <SelectTrigger id="airplane_id">
                 <SelectValue placeholder="Select plane" />
               </SelectTrigger>
@@ -64,6 +75,7 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
             <Input
               type="number"
               name="price"
+              defaultValue={defaultValues?.price}
               id="price"
               min={0}
               placeholder="Ticket price..."
@@ -78,6 +90,7 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
             <Input
               id="departure_city"
               name="departure_city"
+              defaultValue={defaultValues?.departure_city}
               placeholder="Kota keberangkatan..."
             />
           </div>
@@ -87,6 +100,7 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
             <Input
               id="departure_date"
               name="departure_date"
+              // defaultValue={(defaultValues?.departure_date, "YYYY-MM-DDTHH:MM")} // Blum bisa
               type="datetime-local"
               className="block"
             />
@@ -97,6 +111,7 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
             <Input
               id="departure_city_code"
               name="departure_city_code"
+              defaultValue={defaultValues?.departure_city_code}
               placeholder="Departure_city_code..."
             />
           </div>
@@ -107,6 +122,7 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
             <Input
               id="destination_city"
               name="destination_city"
+              defaultValue={defaultValues?.destination_city}
               placeholder="Destination_city..."
             />
           </div>
@@ -116,6 +132,7 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
             <Input
               id="arrival_date"
               name="arrival_date"
+              // defaultValue={(defaultValues?.arrival_date, "YYYY-MM-DDTHH:MM")} // Blum bisa
               type="datetime-local"
               className="block"
             />
@@ -126,6 +143,7 @@ const FormFlights = ({ airplanes }: FormFlightsProps) => {
             <Input
               id="destination_city_code"
               name="destination_city_code"
+              defaultValue={defaultValues?.destination_city_code}
               placeholder="Destination_city_code..."
             />
           </div>
